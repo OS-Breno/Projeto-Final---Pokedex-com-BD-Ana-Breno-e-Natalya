@@ -1,13 +1,14 @@
-#esse é streamlit- muita IA, para referencia; ultimo a alterar: breno
 import streamlit as st
 import base64
 import mysql.connector
+from pathlib import Path
 
-def imagem_base64(caminho):
+def imagem_base64(nome_arquivo):
+    caminho = Path(__file__).resolve().parent.parent / "imagens" / nome_arquivo
     with open(caminho, "rb") as arquivo:
         return base64.b64encode(arquivo.read()).decode()
 
-imagem_poketop = imagem_base64("imagens/Poketop.PNG")
+imagem_poketop = imagem_base64("pokelista.PNG")
 st.markdown(
     f'<img src="data:image/png;base64,{imagem_poketop}" width="250">',
     unsafe_allow_html=True,
@@ -63,7 +64,7 @@ st.markdown(
 col_acc, col_lista = st.columns([2.5, 7.5],gap="small",vertical_alignment="bottom",)
 
 with col_acc:
-    imagem_pokechila = imagem_base64("imagens/Pokechila.PNG")
+    imagem_pokechila = imagem_base64("Pokechila.PNG")
     st.markdown(
         f'<img src="data:image/png;base64,{imagem_pokechila}" width="250">',
         unsafe_allow_html=True,
