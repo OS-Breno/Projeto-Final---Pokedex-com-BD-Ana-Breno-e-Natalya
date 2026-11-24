@@ -1,1 +1,0 @@
-# Projeto-Final---Pokedex-com-BD-Ana-Breno-e-Natalya
