@@ -1,9 +1,9 @@
-#esse é o streamlittela1
-
 import base64
+from pathlib import Path
 import streamlit as st
 
-def imagem_base64(caminho):
+def imagem_base64(nome_arquivo):
+    caminho = Path(__file__).resolve().parent / "imagens" / nome_arquivo
     with open(caminho, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
@@ -53,9 +53,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-titulo = imagem_base64("imagens/titulo_poketop_sem_fundo.png")
-img = imagem_base64("imagens/pokebola_sem_fundo.png")
-img2 = imagem_base64("imagens/pokebola_vermelha_sem_fundo.png")
+titulo = imagem_base64("poketop.png")
+img = imagem_base64("pokebola1.PNG")
+img2 = imagem_base64("pokebola2.PNG")
 
 st.markdown(f"""
 <style>
