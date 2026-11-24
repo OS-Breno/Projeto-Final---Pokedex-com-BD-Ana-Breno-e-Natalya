@@ -1,9 +1,11 @@
 import base64
+from pathlib import Path
 import streamlit as st
 from poketop import cadastrar_pokemon
 import requests
 
-def imagem_base64(caminho):
+def imagem_base64(nome_arquivo):
+    caminho = Path(__file__).resolve().parent.parent / "imagens" / nome_arquivo
     with open(caminho, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
@@ -11,8 +13,7 @@ TIPOS = ["Normal", "Fogo", "Água", "Elétrico", "Grama", "Gelo", "Luta", "Venen
          "Terra", "Voo", "Vidente", "Inseto", "Pedra", "Fantasma", "Dragão",
          "Escuridão", "Aço", "Fada"]
 
-fundo = imagem_base64("imagens/fundo.jpeg")
-
+fundo = imagem_base64("fundo_inserir.png")
 st.markdown(f"""
 <style>
     .stApp {{
@@ -93,11 +94,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-logo = imagem_base64("imagens/inserir_na_poketop_sem_fundo.png")
-st.markdown(
-    f'<div style="text-align: center;"><img src="data:image/png;base64,{logo}" width="300"></div>',
-    unsafe_allow_html=True
-)
+logo = imagem_base64("pokeinserir.png")
+st.markdown(f'<div style="text-align: center;"><img src="data:image/png;base64,{logo}" width="300"></div>',unsafe_allow_html=True)
 
 nome = st.text_input("nome", placeholder="Nome...", label_visibility="collapsed")
 tipo = st.selectbox("tipo", TIPOS, index=None, placeholder="Tipo...", label_visibility="collapsed")
@@ -131,7 +129,7 @@ if salvar:
                 cadastrar_pokemon(nome, tipo, int(nivel), int(hp), int(atq), int(defe), bytes(img))
                 st.success("Pokemon cadastrado")
             else:
-                st.warning("Pokemon não identificado; Verifique a ortografia do nome que digitou, ou tente novamente mais tarde (possível erro de servidor.).")
+                st.warning("Pokemon não identificado; Verifique a ortografia do nome que digitou, ou tente novamente mais tarde (por possível erro de servidor).")
 
         # se digitar letra onde tinha que ser número
         except ValueError:
