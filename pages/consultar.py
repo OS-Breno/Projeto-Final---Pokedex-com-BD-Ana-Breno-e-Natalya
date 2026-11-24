@@ -1,8 +1,10 @@
 import mysql.connector
 import streamlit as st
 import base64
+from pathlib import Path
 
-def imagem_base64(caminho):
+def imagem_base64(nome_arquivo):
+    caminho = Path(__file__).resolve().parent.parent / "imagens" / nome_arquivo
     with open(caminho, "rb") as arquivo:
         return base64.b64encode(arquivo.read()).decode()
 
@@ -34,7 +36,7 @@ if "pokemon_result_index" not in st.session_state:
 if "pokemon_search_done" not in st.session_state:
     st.session_state.pokemon_search_done = False
 
-imagem_poketop = imagem_base64("imagens/pokeconsulta.png")
+imagem_poketop = imagem_base64("pokeconsulta.png")
 st.markdown(
     f'<img src="data:image/png;base64,{imagem_poketop}" width="250">',
     unsafe_allow_html=True,
