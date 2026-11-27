@@ -8,7 +8,7 @@ def imagem_base64(nome_arquivo):
     with open(caminho, "rb") as arquivo:
         return base64.b64encode(arquivo.read()).decode()
 
-type_colors = {
+cores_tipos = {
     "Normal": "#A8A77A",
     "Fogo": "#EE8130",
     "Água": "#6390F0",
@@ -29,12 +29,12 @@ type_colors = {
     "Fada": "#D685AD",
 }
 
-if "pokemon_results" not in st.session_state:
-    st.session_state.pokemon_results = []
-if "pokemon_result_index" not in st.session_state:
-    st.session_state.pokemon_result_index = 0
-if "pokemon_search_done" not in st.session_state:
-    st.session_state.pokemon_search_done = False
+if "pokemon_resultados" not in st.session_state:
+    st.session_state.pokemon_resultados = []
+if "pokemon_resultado_index" not in st.session_state:
+    st.session_state.pokemon_resultado_index = 0
+if "pokemon_pesquisa_completa" not in st.session_state:
+    st.session_state.pokemon_pesquisa_completa = False
 
 imagem_poketop = imagem_base64("pokeconsulta.png")
 st.markdown(
@@ -63,43 +63,35 @@ if procurar:
                 "FROM pokemontop WHERE nome = %s",
                 (procurado.strip().lower(),),
             )
-            st.session_state.pokemon_results = cursor.fetchall()
+            st.session_state.pokemon_resultados = cursor.fetchall()
         finally:
             cursor.close()
     finally:
         conexao.close()
 
-    st.session_state.pokemon_result_index = 0
-    st.session_state.pokemon_search_done = True
+    st.session_state.pokemon_resultado_index = 0
+    st.session_state.pokemon_pesquisa_completa = True
 
-resultados = st.session_state.pokemon_results
+resultados = st.session_state.pokemon_resultados
 cor_fundo = "#424242"
 
 if resultados:
     if len(resultados) > 1:
         col_ultimo, col_proximo = st.columns([1, 1])
         with col_ultimo:
-            if st.button(
-                "Resultado anterior",
-                use_container_width=True,
-                key="antecessor_pokemon_result",
-            ):
-                st.session_state.pokemon_result_index = (
-                    st.session_state.pokemon_result_index - 1
+            if st.button("Resultado anterior",use_container_width=True,key="antecessor_pokemon_result",):
+                st.session_state.pokemon_resultado_index = (
+                    st.session_state.pokemon_resultado_index - 1
                 ) % len(resultados)
         with col_proximo:
-            if st.button(
-                "Próximo resultado",
-                use_container_width=True,
-                key="next_pokemon_result",
-            ):
-                st.session_state.pokemon_result_index = (
-                    st.session_state.pokemon_result_index + 1
+            if st.button("Próximo resultado",use_container_width=True,key="next_pokemon_result",):
+                st.session_state.pokemon_resultado_index = (
+                    st.session_state.pokemon_resultado_index + 1
                 ) % len(resultados)
 
-    pokemon = resultados[st.session_state.pokemon_result_index]
+    pokemon = resultados[st.session_state.pokemon_resultado_index]
     pokemon_id, nome, tipo, nivel, hp, atq, defe, img = pokemon
-    cor_fundo = type_colors.get(str(tipo).strip().title(), "#424242")
+    cor_fundo = cores_tipos.get(str(tipo).strip().title(), "#424242")
 
     with st.container(key="pokemon-card"):
         col_imagem, col_dados = st.columns([1, 2], vertical_alignment="center")
@@ -113,7 +105,7 @@ if resultados:
             st.write(f"**HP:** {hp}")
             st.write(f"**Ataque:** {atq}")
             st.write(f"**Defesa:** {defe}")
-elif st.session_state.pokemon_search_done:
+elif st.session_state.pokemon_pesquisa_completa:
     st.info("Nenhum Pokémon encontrado com esse nome.")
 
 st.markdown(
